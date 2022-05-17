@@ -1,70 +1,21 @@
 import datetime
-from sys import prefix
+#from sys import prefix
 
 from discord.ext.commands import has_permissions, MissingPermissions
 import discord
 import asyncio
 from discord.ext import commands, tasks
-from discord_buttons_plugin import *
-import os
+#from discord_buttons_plugin import *
+#import os
 import json
 from itertools import cycle
 
-def get_prefix(bot, message):
-	with open('prefixes.json', 'r') as f:
-		prefixes = json.load(f)
 
-	return prefixes[str(message.guild.id)]
-
-bot = commands.Bot(command_prefix=(get_prefix), help_command=None)
-buttons = ButtonsClient(bot)
+bot = commands.Bot(command_prefix="!")
+#buttons = ButtonsClient(bot)
 status = cycle(['Ticket', 'Default prefix ^'])
 
 		
-@bot.event
-async def on_guild_join(guild):
-	
-	
-
-	with open ('prefixes.json', 'r') as f:
-		prefixes = json.load(f)
-	
-	prefixes[str(guild.id)] = "^"
-
-	with open ('prefixes.json', 'w') as f:
-		json.dump(prefixes, f, indent=4)
-
-
-
-@bot.event
-async def on_guild_remove(guild):
-	with open('prefixes.json', 'r') as f:
-		prefixes = json.load(f)
-	
-	prefixes.pop(str(guild.id))
-
-	with open ('prefixes.json', 'w') as f:
-		json.dump(prefixes, f, indent=4)
-
-@bot.command()
-async def changeprefix(ctx, prefix):
-	with open('prefixes.json', 'r') as f:
-		prefixes = json.load(f)
-	
-	prefixes[str(ctx.guild.id)] = prefix
-	
-
-	with open ('prefixes.json', 'w') as f:
-		json.dump(prefixes, f, indent=4)
-
-	log_embed = discord.Embed(title="AvenueMC Log System", description=f"Changing prefix to `{prefix}`. By {ctx.author.name}", color=0xe74c3c)
-	log_embed.timestamp = datetime.datetime.utcnow()
-	log_embed.set_footer(text="AvenueMC")
-
-	channel = bot.get_channel(966799146877079593)
-	await channel.send(embed = log_embed)
-
-	await ctx.send(f"Prefix changed to {prefix}")
 
 @bot.command
 async def createchannels(ctx):
@@ -135,7 +86,7 @@ async def removerole(ctx, role: discord.Role, user: discord.Member):
         await user.remove_roles(role)
         await ctx.send(f'I have successfully removed {role.mention} from {user.mention}')
 
-@bot.command()
+#@bot.command()
 @has_permissions(manage_roles=True, ban_members=True)
 async def help(ctx):
 	embed = discord.Embed(title="Help", description="This is all the commands!",color=0xe74c3c)
@@ -153,7 +104,7 @@ async def help(ctx):
 	await ctx.send(embed=embed)
 
 
-@buttons.click
+#@buttons.click
 async def Supportbutton(ctx):
 	guild = ctx.message.guild
 	name = 'Tickets'
@@ -185,7 +136,7 @@ async def Supportbutton(ctx):
 	channel = bot.get_channel(966799146877079593)
 	await channel.send(embed = log_embed)
 
-@buttons.click
+#@buttons.click
 async def paymentbutton(ctx):
 	guild = ctx.message.guild
 	name = 'Tickets'
@@ -217,7 +168,7 @@ async def paymentbutton(ctx):
 	#Verander dit naar de ID van je channel
 	channel = bot.get_channel(966799146877079593)
 	await channel.send(embed = log_embed)
-@buttons.click
+#@buttons.click
 async def bugbutton(ctx):
 	
 
@@ -256,6 +207,20 @@ async def bugbutton(ctx):
 	#Verander dit naar de ID van je channel
 	channel = bot.get_channel(966799146877079593)
 	await channel.send(embed = log_embed)
+
+@bot.command()
+async def suggest(ctx, *,suggestion):
+  
+    await ctx.channel.purge(limit = 1)
+ 
+    suggestEmbed = discord.Embed(colour = 0xFF0000)
+    suggestEmbed.set_author(name=f'Suggested by {ctx.message.author}', icon_url = f'{ctx.author.avatar_url}')
+    suggestEmbed.add_field(name = 'Suggestion', value = f'{suggestion}')
+  
+    message = await ctx.send(embed=suggestEmbed)
+
+    await message.add_reaction('✅')
+    await message.add_reaction('❌')
 
 @bot.command()
 async def ticket(ctx):
@@ -303,7 +268,7 @@ async def ticket(ctx):
 	)
 
 @bot.command(pass_context=True)
-@has_permissions(manage_roles=True, ban_members=True, reason=None)
+@has_permissions(manage_roles=True, ban_members=True)
 async def close(ctx):
 
 
@@ -408,7 +373,7 @@ async def clear_error(ctx, error):
 		embed = discord.Embed(title="Missing Permission", description="You dont have the permission to delete messages.", color=discord.Color.red)
 		await ctx.send(embed=embed)
 
-@help.error
+#@help.error
 async def help_error(ctx, error):
 	if isinstance(error, commands.MissingPermissions):
 		embed = discord.Embed(title="Missing Permission", description="You dont have the permission to the help command.", color=0xe74c3c)
@@ -451,4 +416,4 @@ async def close_error(ctx, error):
 		await ctx.send(embed=embed)		
 
 #Your token
-bot.run()
+bot.run("OTY0OTE5NzE3ODc1ODE0NDYx.GfaExW.zYX3grsoGUuEcJ9w5EJKiVlk-FR14iV0PBBTgQ")
